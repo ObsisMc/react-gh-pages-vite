@@ -1,19 +1,12 @@
 # Deploying a React App* to GitHub Pages
 
-\* created using `create-react-app`
+\* created using `npm create vite@latest my-vue-app`
 
 # Introduction
 
 In this tutorial, I'll show you how you can create a React app and deploy it to GitHub Pages.
-
-To create the React app, I'll be using [`create-react-app`](https://create-react-app.dev/), which is a tool people can use to create a React app from scratch. To deploy the React app, I'll be using [`gh-pages`](https://github.com/tschaub/gh-pages), which is an npm package people can use to deploy things to [GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages), a free web hosting service provided by GitHub.
-
 If you follow along with this tutorial, you'll end up with a new React app—hosted on GitHub Pages—which you can then customize.
 
-## Translations
-
-This tutorial has been translated from its original English into the following languages:
-- [Traditional Chinese](https://github.com/gitname/react-gh-pages/issues/167#issuecomment-1925551338) (credit: [@creaper9487](https://github.com/creaper9487))
 
 # Tutorial
 
@@ -76,13 +69,8 @@ At this point, your GitHub account contains an empty repository, having the name
     > In case you want to use a different name from `my-app` (e.g. `web-ui`), you can accomplish that by replacing all occurrences of `my-app` in this tutorial, with that other name (i.e. `my-app` --> `web-ui`).
   
     ```shell
-    $ npx create-react-app my-app
+    $ npm create vite@latest my-app 
     ```
-
-    > That command will create a React app written in JavaScript. To create one written in [TypeScript](https://create-react-app.dev/docs/adding-typescript/#installation), you can issue this command instead:
-    > ```shell
-    > $ npx create-react-app my-app --template typescript
-    > ```
 
     That command will create a new folder named `my-app`, which will contain the source code of a React app.
 
@@ -148,12 +136,27 @@ At this point, the React app's `package.json` file includes a property named `ho
     ```diff
     "scripts": {
     +   "predeploy": "npm run build",
-    +   "deploy": "gh-pages -d build",
+    +   "deploy": "gh-pages -d dist",
         "start": "react-scripts start",
         "build": "react-scripts build",
     ```
 
 At this point, the  React app's `package.json` file includes deployment scripts.
+
+### 5.5 Pay Attention to the `base` of the project!
+
+You should add a `base` field in the `vite.config.js`:
+
+```js
+export default defineConfig({
+  plugins: [react()],
+  base: "./"  // add this line
+})
+```
+
+which will change the directory base of `dist/index.html` created after `npm run build`. Otherwise, you will encounter this [issue](https://github.com/gitname/react-gh-pages/issues/194).
+
+
 
 ### 6. Add a "remote" that points to the GitHub repository
 
@@ -212,6 +215,8 @@ At this point, the GitHub repository contains a branch named `gh-pages`, which c
 **That's it!** The React app has been deployed to GitHub Pages! :rocket:
 
 At this point, the React app is accessible to anyone who visits the `homepage` URL you specified in Step 4. For example, the React app I deployed is accessible at https://gitname.github.io/react-gh-pages.
+
+
 
 ### 9. (Optional) Store the React app's _source code_ on GitHub
 
